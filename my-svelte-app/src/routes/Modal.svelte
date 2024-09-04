@@ -1,13 +1,19 @@
 <script>
 	import moment from "moment";
-	let now = moment();
+	let now = moment().subtract(10, 'days').calendar();
 	
 	export let taskName = "";
 	export let taskDescription = "";
 	export let taskDate = "";
 	export let errorFound = false; 
+	export let actived; // Accepter la fonction passée en prop
+
+	function close() {
+		if (typeof actived === 'function') {
+			actived(); // Appeler la fonction actived quand l'utilisateur clique
+		}
+	}
 	
-	console.log(`${now} date du form : ${taskDate}`);
 	
 	export let errors = {taskName: "", taskDescription: "", taskDate: ""};
 	
@@ -37,6 +43,9 @@
 		if (date === "") {
 			tempErrors.taskDate = "Ce champ est vide !";
 		}
+		else if (moment(date).isBefore(moment(), 'day')) {
+			tempErrors.taskDate = "La date ne peut pas être antérieure à aujourd'hui.";
+		}
 	
 		
 		errors = tempErrors;
@@ -57,18 +66,28 @@
 		event.preventDefault();
 	
 		validate(taskName, taskDescription, taskDate);
-	
+		console.log(`${now} date du form : ${taskDate}`);
 		if (!errorFound) {
 			console.log("Ajouter la tâche au local storage");
 		} else {
 			console.log("Des erreurs ont été trouvées, la tâche n'a pas été ajoutée");
 		}
 	}
+
+	
+	// console.log(isActived);
+	
+	// function disactivedModal() {
+	// 	isActived = true;
+	// 	console.log(isActived);
+		
+	// }
+
 	</script>
 	
 	<section>
 		<div class="modal-header">
-			<button>X</button>
+			<button on:click={close}>X</button>
 			<div class="title-header">
 				<h2>Add new task</h2>
 			</div>
@@ -114,8 +133,6 @@
 			.modal-header {
 				width: 100%;
 				background-color: #4A3780;
-				border-top-left-radius: 15px;
-				border-top-right-radius: 15px;
 				color: white;
 				padding: 10px;
 				display: flex;
