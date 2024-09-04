@@ -2,12 +2,12 @@
 	import moment from "moment";
 	let now = moment();
 	
-	console.log(now.format('YYYY-MM-DD'));
-	
 	export let taskName = "";
 	export let taskDescription = "";
 	export let taskDate = "";
-	export let errorFound = false;
+	export let errorFound = false; 
+	
+	console.log(`${now} date du form : ${taskDate}`);
 	
 	export let errors = {taskName: "", taskDescription: "", taskDate: ""};
 	
