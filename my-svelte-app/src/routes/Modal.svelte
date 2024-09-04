@@ -1,59 +1,72 @@
 <script>
+	// Imports
 	import moment from "moment";
+
+	// Variables
 	let now = moment().subtract(10, 'days').calendar();
-	
 	export let taskName = "";
 	export let taskDescription = "";
 	export let taskDate = "";
 	export let errorFound = false; 
-	export let actived; // Accepter la fonction passée en prop
+	export let errors = {taskName: "", taskDescription: "", taskDate: ""};
+
+	// Props
+	export let actived;
 
 	function close() {
 		if (typeof actived === 'function') {
-			actived(); // Appeler la fonction actived quand l'utilisateur clique
+			actived(); 
 		}
 	}
 	
 	
-	export let errors = {taskName: "", taskDescription: "", taskDate: ""};
 	
+	// functions
 	function validate(name, description, date) {
 		errorFound = false;
 		let tempErrors = {taskName: "", taskDescription: "", taskDate: ""};
-	
-		// Les messages d'erreur pour taskName
-		if (name === "") {
-			tempErrors.taskName = "Ce champ est vide !";
-		} else if (name.length < 3) {
-			tempErrors.taskName = `Il manque ${3 - name.length} charactères dans votre task name`;
-		} else if (name.length > 10) {
-			tempErrors.taskName = `Il y a ${name.length - 10} charactères en trop dans votre task name`;
+
+		// Error messages for taskName
+		if (name !== null) {
+			if (name === "") {
+			tempErrors.taskName = "This field is empty!";
+			} else if (name.length < 3) {
+				tempErrors.taskName = `You are missing ${3 - name.length} characters in your task name`;
+			} else if (name.length > 25) {
+				tempErrors.taskName = `There are ${name.length - 25} extra characters in your task name`;
+			}
 		}
-	
-		// Les messages d'erreur pour taskDescription
-		if (description === "") {
-			tempErrors.taskDescription = "Ce champ est vide !";
-		} else if (description.length < 15) {
-			tempErrors.taskDescription = `Il manque ${15 - description.length} charactères dans votre description`;
-		} else if (description.length > 255) {
-			tempErrors.taskDescription = `Il y a ${description.length -255} charactères en trop dans votre description`;
-		}
-	
-		// Les messages d'erreur pour taskDate
-		if (date === "") {
-			tempErrors.taskDate = "Ce champ est vide !";
-		}
-		else if (moment(date).isBefore(moment(), 'day')) {
-			tempErrors.taskDate = "La date ne peut pas être antérieure à aujourd'hui.";
-		}
-	
 		
+
+		// Error messages for taskDescription
+		if (description !== null) {
+			if (description === "") {
+			tempErrors.taskDescription = "This field is empty!";
+			} else if (description.length < 15) {
+				tempErrors.taskDescription = `You are missing ${15 - description.length} characters in your description`;
+			} else if (description.length > 255) {
+				tempErrors.taskDescription = `There are ${description.length - 255} extra characters in your description`;
+			}
+		}
+		
+
+		// Error messages for taskDate
+		if ( date !== null) {
+			if (date === "") {
+			tempErrors.taskDate = "This field is empty!";
+			} else if (moment(date).isBefore(moment(), 'day')) {
+				tempErrors.taskDate = "The date cannot be earlier than today.";
+			}
+		}
+		
+
 		errors = tempErrors;
 
 		if (errors.taskName || errors.taskDescription || errors.taskDate) {
 			errorFound = true;
 		}
 	}
+
 
 	function handleKeyup() {
 		if (errorFound) {
@@ -74,15 +87,6 @@
 		}
 	}
 
-	
-	// console.log(isActived);
-	
-	// function disactivedModal() {
-	// 	isActived = true;
-	// 	console.log(isActived);
-		
-	// }
-
 	</script>
 	
 	<section>
@@ -95,20 +99,20 @@
 		<form on:submit={addTask}>
 			<label for="taskName">Nom de la tâche :</label>
 			<br>
-			<input type="text" name="taskName" id="taskName" bind:value={taskName} on:keyup={handleKeyup}>
+			<input type="text" name="taskName" id="taskName" bind:value={taskName} on:keyup={validate(taskName, null,  null)}>
 			{#if errors.taskName}
 			<p class="error">{errors.taskName}</p>
 			{/if}
 
 			<label for="taskDate">Date de la tâche :</label>
 			<br>
-			<input type="date" name="taskDate" id="taskDate" bind:value={taskDate}  on:keyup={handleKeyup}>
+			<input type="date" name="taskDate" id="taskDate" bind:value={taskDate}  on:change={validate(null, null,  taskDate)}>
 			{#if errors.taskDate}
 			<p class="error">{errors.taskDate}</p>
 			{/if} 
 	
 			<label for="taskDescription">Description de la tâche :</label>
-			<textarea name="description" id="taskDescription" cols="30" rows="10" bind:value={taskDescription} on:keyup={handleKeyup}></textarea>
+			<textarea name="description" id="taskDescription" cols="30" rows="10" bind:value={taskDescription} on:keyup={validate(null, taskDescription, null )}></textarea>
 			{#if errors.taskDescription}
 			<p class="error">{errors.taskDescription}</p>
 			{/if}
@@ -144,18 +148,19 @@
 					border: none;
 					width: 50px;
 					height: 50px;
+					cursor: pointer;
 				}
 
 				.title-header {
-					width: 90%;
-					text-align: center;
+					width: 55%;
+					text-align: left;
 				}
 			}
 	
 			form {
 				position: relative;
 				width: 100%;
-				height: 80vh;
+				height: 85vh;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-around;
@@ -163,20 +168,28 @@
 				gap: 5px;
 				padding-top: 10px;
 
+				label {
+					font-weight: bold;
+				}
 				input {
 					width: 90%;
-					height: 50px;
+					min-height: 50px;
 					padding-left: 5px;
 					border-radius: 5px;
 				}
 
 				textarea {
 					width: 90%;
+					min-height: 150px;
 				}
 				
 				.error {
-					color: red;
+					background-color: tomato;
+					padding: 5px 15px;
+					border-radius: 5px;
+					color: white;
 					font-size: 0.9em;
+					font-weight: bold;
 				}
 			}
 		}
