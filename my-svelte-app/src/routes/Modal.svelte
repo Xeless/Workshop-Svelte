@@ -1,11 +1,20 @@
 <script>
 	// Imports
 	import moment from "moment";
+	import Document from "./../lib/images/Document.svg";
+	import Basketball from "./../lib/images/Basketball.svg";
+	import Calendar from "./../lib/images/Calendar.svg";
 
 	// Variables
 	let now = moment().subtract(10, 'days').calendar();
 	export let taskName = "";
 	export let taskDescription = "";
+	export let categorys = [
+		{name: "study", icon: Document},
+		{name: "sport", icon: Basketball},
+		{name: "event", icon: Calendar}
+	];
+	export let categorySelected = [];
 	export let taskDate = "";
 	export let errorFound = false; 
 	export let errors = {taskName: "", taskDescription: "", taskDate: ""};
@@ -77,7 +86,8 @@
 	
 	function addTask(event) {
 		event.preventDefault();
-	
+		console.log(categorySelected);
+		
 		validate(taskName, taskDescription, taskDate);
 		console.log(`${now} date du form : ${taskDate}`);
 		if (!errorFound) {
@@ -85,6 +95,10 @@
 		} else {
 			console.log("Des erreurs ont été trouvées, la tâche n'a pas été ajoutée");
 		}
+	}
+
+	let selectedcategoryFunction = () => {
+		categorySelected = [{name: category.name, icon: category.icon}]
 	}
 
 	</script>
@@ -97,21 +111,38 @@
 			</div>
 		</div>
 		<form on:submit={addTask}>
-			<label for="taskName">Nom de la tâche :</label>
+			<label for="taskName">Task name :</label>
 			<br>
-			<input type="text" name="taskName" id="taskName" bind:value={taskName} on:keyup={validate(taskName, null,  null)}>
+			<input type="text" name="taskName" id="taskName" placeholder="Task name" bind:value={taskName} on:keyup={validate(taskName, null,  null)}>
 			{#if errors.taskName}
 			<p class="error">{errors.taskName}</p>
 			{/if}
-
-			<label for="taskDate">Date de la tâche :</label>
+			<label for="category">Category :</label>
+			<br>
+			<div class="categorys">
+			{#each categorys as category}
+			
+				<div 
+				class="category {categorySelected.name === category.name ? 'selected' : ''}" 
+				role="button" 
+				tabindex="0"
+				value={category.name} 
+				on:click={() => categorySelected = category}
+				on:keydown={(event) => event.key === 'Enter' && (categorySelected = category)}
+				>
+					<img src={category.icon} alt={category.name}>
+					<p>{category.name}</p>
+				</div>
+			{/each}
+			</div>
+			<label for="taskDate">Task date :</label>
 			<br>
 			<input type="date" name="taskDate" id="taskDate" bind:value={taskDate}  on:change={validate(null, null,  taskDate)}>
 			{#if errors.taskDate}
 			<p class="error">{errors.taskDate}</p>
 			{/if} 
 	
-			<label for="taskDescription">Description de la tâche :</label>
+			<label for="taskDescription">Task description :</label>
 			<textarea name="description" id="taskDescription" cols="30" rows="10" bind:value={taskDescription} on:keyup={validate(null, taskDescription, null )}></textarea>
 			{#if errors.taskDescription}
 			<p class="error">{errors.taskDescription}</p>
@@ -136,6 +167,8 @@
 
 			.modal-header {
 				width: 100%;
+				background-image: url('./../lib/images/Header\ \(1\).svg');
+				background-size: cover;
 				background-color: #4A3780;
 				color: white;
 				padding: 10px;
@@ -160,7 +193,7 @@
 			form {
 				position: relative;
 				width: 100%;
-				height: 85vh;
+				height: 95vh;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-around;
@@ -170,12 +203,53 @@
 
 				label {
 					font-weight: bold;
+					margin-top: 10px;
 				}
 				input {
 					width: 90%;
 					min-height: 50px;
 					padding-left: 5px;
 					border-radius: 5px;
+				}
+				textarea {
+					margin-top: 15px;
+					border-radius: 5px;
+				}
+				input[type=submit] {
+					margin-top: 30px;
+					margin-bottom: 30px;
+					background-color: #4A3780;
+					color: white;
+					border-radius: 60px;
+				}
+
+				.categorys {
+					display: flex;
+					flex-direction: row;
+					gap: 25px;
+					.category {
+						padding: 10px;
+						width: 70px;
+						height: 100px !important;
+						border-radius: 15px;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						align-items: center;
+						&:hover {
+							background-color: rgba(0, 255, 255, 0.222);
+						}
+						img {
+							width: 80%;
+						}
+						p {
+							font-weight: bold;
+						}
+					}
+					.selected {
+						background-color: rgba(0, 255, 187, 0.222);
+						border: 2px black solid;
+					}
 				}
 
 				textarea {

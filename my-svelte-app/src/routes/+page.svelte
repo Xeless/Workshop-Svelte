@@ -20,7 +20,7 @@ function actived() {
 {#if modalIsActived !== true}
 <Test {actived}/>
 {/if}
-
+ 
 	
 <style lang="scss">
 	
