@@ -3,62 +3,96 @@
   
 	let tasks = [
 	  {
-		   categorie: "<svg width=\"48\" height=\"48\" viewBox=\"0 0 48 48\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\,",
+
 		nom: "WorkShop",
-		date: "04/09/1998",
-		time: "12H"
+		date: "12 jours restant"
 	  },
 	
 	];
   </script>
   
+
   <Header />
+
   
   <section>
-	<ul>
+	<ul class="to-do-list-container">	
 	  {#each tasks as task}
-		<li>
-		  <h4>{task.categorie}{task.nom}</h4>
-		  <p>{task.date},  {task.time}</p>
+		<li class="to-do-list-item">
+			<div class="to-do-list-container-item">
+				<img src="/Category-Goal.png" alt="Goal">
+				<div class="to-do-list-text">
+					<h4>{task.nom}</h4>
+					<span>{task.date}</span>
+				</div>
+			</div>
 		</li>
 	  {/each}
 	</ul>
   
 	<button>Add New Task</button>
-  </section>
+</section>
+
   
-<style>
-button{
-	all: unset; 
-        cursor: pointer; 
-        padding: 10px; 
-		text-align: center; 
+  <style>
+	button {
+		all: unset;
+		cursor: pointer;
+		padding: 10px;
+		text-align: center;
 		background-color: #4A3780;
 		width: 358px;
 		height: 56px;
-		top: 764px;
-		left: 16px;
 		gap: 10px;
 		border-radius: 50px;
 		color: white;
-}
-
-li{
-	display: inline-block;
-}
-
+	}
+	
+	img {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		display: flex;
+	}
+	
 	section {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: Fixed (358px)px;
-		height: Hug (470px)px;
-		top: 158px;
-		left: 16px;
-		padding: 10px;
+		padding: 20px;
 		gap: 24px;
-        opacity: 0px;
+		
+	}
+	
+	.to-do-list-container {
+		width: 25%;
+		list-style: none;
+		border-bottom: 1px solid #4A3780;
+		display: flex;
+		background-color: white;
+		border-radius: 10px;
+	}
+	
+	.to-do-list-item {
+		display: flex;
+		align-items: center; 
+		gap: 12px; 
+	}
+	
+	.to-do-list-container-item {
+		display: flex;
+		align-items: center; 	
+		gap: 12px; 
+	}
+	
+	.to-do-list-text {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 10%;
 	}
 
-
-</style>
+	.to-do-list-text span {
+	margin-top: auto;
+}
+	</style>
+	

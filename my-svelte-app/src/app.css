@@ -33,6 +33,7 @@ p {
 
 p {
 	line-height: 1.5;
+	color: black;
 }
 
 a {
@@ -72,6 +73,10 @@ pre {
 	justify-content: center;
 	margin: 0 auto;
 }
+
+
+
+
 
 input,
 button {

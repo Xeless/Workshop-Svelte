@@ -4,10 +4,13 @@
 </header>
 
 
+
 <style>
-        
         header {
-            background-color:#4A3780;
+            background-image: url('/Header.svg');
+            background-size: cover; 
+	    background-position: center;
+	    background-repeat: no-repeat;
         }
    
 </style>
