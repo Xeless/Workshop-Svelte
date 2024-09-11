@@ -17,7 +17,7 @@
 	export let categorySelected = [];
 	export let taskDate = "";
 	export let errorFound = false; 
-	export let errors = {taskName: "", taskDescription: "", taskDate: ""};
+	export let errors = {taskName: "", taskDescription: "", taskDate: "", categorySelected: ""};
 
 	// Props
 	export let actived;
@@ -31,9 +31,9 @@
 	
 	
 	// functions
-	function validate(name, description, date) {
+	function validate(name, description, date, categorySelected) {
 		errorFound = false;
-		let tempErrors = {taskName: "", taskDescription: "", taskDate: ""};
+		let tempErrors = {taskName: "", taskDescription: "", taskDate: "", categorySelected: ""};
 
 		// Error messages for taskName
 		if (name !== null) {
@@ -67,11 +67,17 @@
 				tempErrors.taskDate = "The date cannot be earlier than today.";
 			}
 		}
+
+		if (categorySelected !== null) {
+			if (categorySelected.length === 0) {
+            	tempErrors.categorySelected = "Please choose a category!";
+        	}
+		}
 		
 
 		errors = tempErrors;
 
-		if (errors.taskName || errors.taskDescription || errors.taskDate) {
+		if (errors.taskName || errors.taskDescription || errors.taskDate || errors.categorySelected) {
 			errorFound = true;
 		}
 	}
@@ -79,7 +85,7 @@
 
 	function handleKeyup() {
 		if (errorFound) {
-			validate(taskName, taskDescription, taskDate);
+			validate(taskName, taskDescription, taskDate, categorySelected);
 		}
 		
 	}
@@ -88,79 +94,116 @@
 		event.preventDefault();
 		console.log(categorySelected);
 		
-		validate(taskName, taskDescription, taskDate);
+		validate(taskName, taskDescription, taskDate, categorySelected);
 		console.log(`${now} date du form : ${taskDate}`);
+		console.log(errors);
+		
 		if (!errorFound) {
+			saveTask(taskName, taskDate, taskDescription, categorySelected);
 			console.log("Ajouter la tâche au local storage");
 		} else {
 			console.log("Des erreurs ont été trouvées, la tâche n'a pas été ajoutée");
 		}
 	}
 
+
 	let selectedcategoryFunction = () => {
 		categorySelected = [{name: category.name, icon: category.icon}]
 	}
 
-	</script>
-	
-	<section>
-		<div class="modal-header">
-			<button on:click={close}>X</button>
-			<div class="title-header">
-				<h2>Add new task</h2>
-			</div>
-		</div>
-		<form on:submit={addTask}>
-			<label for="taskName">Task name :</label>
-			<br>
-			<input type="text" name="taskName" id="taskName" placeholder="Task name" bind:value={taskName} on:keyup={validate(taskName, null,  null)}>
-			{#if errors.taskName}
-			<p class="error">{errors.taskName}</p>
-			{/if}
-			<label for="category">Category :</label>
-			<br>
-			<div class="categorys">
-			{#each categorys as category}
-			
-				<div class=" {categorySelected.name === category.name ? `category selected-${category.name}` : `category ${category.name}`}" role="button" tabindex="0"
-				value={category.name} 
-				on:click={() => categorySelected = category}
-				on:keydown={(event) => event.key === 'Enter' && (categorySelected = category)}
-				>
-					<img src={category.icon} alt={category.name}>
-					<p>{category.name}</p>
-				</div>
-			{/each}
-			</div>
-			<label for="taskDate">Task date :</label>
-			<br>
-			<input type="date" name="taskDate" id="taskDate" bind:value={taskDate}  on:change={validate(null, null,  taskDate)}>
-			{#if errors.taskDate}
-			<p class="error">{errors.taskDate}</p>
-			{/if} 
-	
-			<label for="taskDescription">Task description :</label>
-			<textarea name="description" id="taskDescription" placeholder="Task description here, min 15 character and max 255 character" cols="30" rows="10" bind:value={taskDescription} on:keyup={validate(null, taskDescription, null )}></textarea>
-			{#if errors.taskDescription}
-			<p class="error">{errors.taskDescription}</p>
-			{/if}
-	
-			
-	
-			<input type="submit" value="Ajouter la tâche">
-		</form>
-	
-		<h1>{taskName}</h1>
-	</section>
-	
-	<style scoped lang="scss">
-		section {
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			flex: 0.6;
+	function saveTask(name, date, description, category) {
+    const task = { name, date, description, category };
+    localStorage.setItem('task', JSON.stringify(task)); 
+    
+  }
+  let verifyCategory = (category) => {
+	categorySelected = category;
+	validate(taskName, taskDescription, taskDate, categorySelected);
+  }
+</script>
+
+<section>
+  <div class="modal-header">
+    <button on:click={close}>X</button>
+    <div class="title-header">
+      <h2>Add new task</h2>
+    </div>
+  </div>
+  <form on:submit={addTask}>
+    <label for="taskName">Task name :</label>
+    <br />
+    <input
+      type="text"
+      name="taskName"
+      id="taskName"
+      placeholder="Task name"
+      bind:value={taskName}
+      on:keyup={validate(taskName, null, null, null)}
+    />
+    {#if errors.taskName}
+      <p class="error">{errors.taskName}</p>
+    {/if}
+    <label for="category">Category :</label>
+    <br />
+    <div class="categorys">
+      {#each categorys as category}
+        <div
+          class="category {categorySelected.name === category.name
+            ? 'selected'
+            : ''}"
+          role="button"
+          tabindex="0"
+          value={category.name}
+          on:click={verifyCategory(category)}
+          on:keydown={(event) =>
+            event.key === "Enter" && (categorySelected = category)}
+        >
+          <img src={category.icon} alt={category.name} />
+          <p>{category.name}</p>
+        </div>
+      {/each}
+    </div>
+	{#if errors.categorySelected}
+		<p class="error">{errors.categorySelected}</p>
+	{/if}
+    <label for="taskDate">Task date :</label>
+    <br />
+    <input
+      type="date"
+      name="taskDate"
+      id="taskDate"
+      bind:value={taskDate}
+      on:change={validate(null, null, taskDate, null)}
+    />
+    {#if errors.taskDate}
+      <p class="error">{errors.taskDate}</p>
+    {/if}
+
+    <label for="taskDescription">Task description :</label>
+    <textarea
+      name="description"
+      id="taskDescription"
+      cols="30"
+      rows="10"
+      bind:value={taskDescription}
+      on:keyup={validate(null, taskDescription, null, null)}
+    ></textarea>
+    {#if errors.taskDescription}
+      <p class="error">{errors.taskDescription}</p>
+    {/if}
+
+    <input type="submit" />
+  </form>
+</section>
+
+<style scoped lang="scss">
+  section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 0.6;
 
 			.modal-header {
 				width: 100%;
@@ -172,33 +215,31 @@
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
-				
-				
 
 				button {
 					border-radius: 100%;
 					border: none;
-					width: 40px;
-					height: 40px;
+					width: 50px;
+					height: 50px;
 					cursor: pointer;
 				}
 
-				.title-header {
-					width: 55%;
-					text-align: left;
-				}
-			}
-	
-			form {
-				position: relative;
-				width: 100%;
-				height: 95vh;
-				display: flex;
-				flex-direction: column;
-				justify-content: space-around;
-				align-items: center;
-				gap: 5px;
-				padding-top: 10px;
+      .title-header {
+        width: 55%;
+        text-align: left;
+      }
+    }
+
+    form {
+      position: relative;
+      width: 100%;
+      height: 95vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      gap: 5px;
+      padding-top: 10px;
 
 				label {
 					font-weight: bold;
@@ -215,13 +256,11 @@
 					border-radius: 5px;
 				}
 				input[type=submit] {
-					width: 150px;
 					margin-top: 30px;
 					margin-bottom: 30px;
 					background-color: #4A3780;
 					color: white;
 					border-radius: 60px;
-					cursor: pointer;
 				}
 
 				.categorys {
@@ -237,9 +276,9 @@
 						flex-direction: column;
 						justify-content: space-between;
 						align-items: center;
-						cursor: pointer;
-						transition: ease-out 0.5s;
-					
+						&:hover {
+							background-color: rgba(0, 255, 255, 0.222);
+						}
 						img {
 							width: 80%;
 						}
@@ -247,39 +286,15 @@
 							font-weight: bold;
 						}
 					}
-					.study {
-						&:hover {
-							background-color: rgba(0, 255, 187, 0.222);
-						}
+					.selected {
+						background-color: rgba(0, 255, 187, 0.222);
+						border: 2px black solid;
 					}
-					.sport {
-						&:hover {
-							background-color: rgba(255, 128, 0, 0.222);
-						}
-					}
-					.event {
-						&:hover {
-							background-color: rgba(0, 225, 255, 0.222);
-						}
-					}
-					.selected-study {
-							border: 2px black solid;
-							background-color: rgba(0, 255, 187, 0.222);
-						}
-					.selected-sport {
-							border: 2px black solid;
-							background-color: rgba(255, 128, 0, 0.222);
-						}
-					.selected-event {
-							border: 2px black solid;
-							background-color: rgba(0, 225, 255, 0.222);
-						}
 				}
 
 				textarea {
 					width: 90%;
 					min-height: 150px;
-					padding: 5px;
 				}
 				
 				.error {
@@ -291,10 +306,6 @@
 					font-weight: bold;
 				}
 			}
-		}
-	
-		h1 {
-			width: 100%;
 		}
 	</style>
 	
