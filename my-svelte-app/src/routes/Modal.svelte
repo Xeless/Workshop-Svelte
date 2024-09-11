@@ -122,10 +122,7 @@
 			<div class="categorys">
 			{#each categorys as category}
 			
-				<div 
-				class="category {categorySelected.name === category.name ? 'selected' : ''}" 
-				role="button" 
-				tabindex="0"
+				<div class=" {categorySelected.name === category.name ? `category selected-${category.name}` : `category ${category.name}`}" role="button" tabindex="0"
 				value={category.name} 
 				on:click={() => categorySelected = category}
 				on:keydown={(event) => event.key === 'Enter' && (categorySelected = category)}
@@ -143,7 +140,7 @@
 			{/if} 
 	
 			<label for="taskDescription">Task description :</label>
-			<textarea name="description" id="taskDescription" cols="30" rows="10" bind:value={taskDescription} on:keyup={validate(null, taskDescription, null )}></textarea>
+			<textarea name="description" id="taskDescription" placeholder="Task description here, min 15 character and max 255 character" cols="30" rows="10" bind:value={taskDescription} on:keyup={validate(null, taskDescription, null )}></textarea>
 			{#if errors.taskDescription}
 			<p class="error">{errors.taskDescription}</p>
 			{/if}
@@ -175,12 +172,14 @@
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
+				
+				
 
 				button {
 					border-radius: 100%;
 					border: none;
-					width: 50px;
-					height: 50px;
+					width: 40px;
+					height: 40px;
 					cursor: pointer;
 				}
 
@@ -216,11 +215,13 @@
 					border-radius: 5px;
 				}
 				input[type=submit] {
+					width: 150px;
 					margin-top: 30px;
 					margin-bottom: 30px;
 					background-color: #4A3780;
 					color: white;
 					border-radius: 60px;
+					cursor: pointer;
 				}
 
 				.categorys {
@@ -236,9 +237,9 @@
 						flex-direction: column;
 						justify-content: space-between;
 						align-items: center;
-						&:hover {
-							background-color: rgba(0, 255, 255, 0.222);
-						}
+						cursor: pointer;
+						transition: ease-out 0.5s;
+					
 						img {
 							width: 80%;
 						}
@@ -246,15 +247,39 @@
 							font-weight: bold;
 						}
 					}
-					.selected {
-						background-color: rgba(0, 255, 187, 0.222);
-						border: 2px black solid;
+					.study {
+						&:hover {
+							background-color: rgba(0, 255, 187, 0.222);
+						}
 					}
+					.sport {
+						&:hover {
+							background-color: rgba(255, 128, 0, 0.222);
+						}
+					}
+					.event {
+						&:hover {
+							background-color: rgba(0, 225, 255, 0.222);
+						}
+					}
+					.selected-study {
+							border: 2px black solid;
+							background-color: rgba(0, 255, 187, 0.222);
+						}
+					.selected-sport {
+							border: 2px black solid;
+							background-color: rgba(255, 128, 0, 0.222);
+						}
+					.selected-event {
+							border: 2px black solid;
+							background-color: rgba(0, 225, 255, 0.222);
+						}
 				}
 
 				textarea {
 					width: 90%;
 					min-height: 150px;
+					padding: 5px;
 				}
 				
 				.error {
