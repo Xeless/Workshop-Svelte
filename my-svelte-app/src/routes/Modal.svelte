@@ -99,7 +99,7 @@
 		console.log(errors);
 		
 		if (!errorFound) {
-			saveTask(taskName, taskDate, taskDescription, categorySelected);
+			saveTask(taskName, taskDate, taskDescription, categorySelected, false);
 			console.log("Ajouter la tâche au local storage");
 		} else {
 			console.log("Des erreurs ont été trouvées, la tâche n'a pas été ajoutée");
@@ -111,11 +111,16 @@
 		categorySelected = [{name: category.name, icon: category.icon}]
 	}
 
-	function saveTask(name, date, description, category) {
-    const task = { name, date, description, category };
-    localStorage.setItem('task', JSON.stringify(task)); 
+	//On pouvait ajouter qu'une taches je l'ai donc un peu modifié
+	function saveTask(name, date, description, category, completed) {
+		const task = { name, date, description, category, completed };
     
-  }
+		let tasks = JSON.parse(localStorage.getItem('task')) || [];
+		tasks.push(task);
+
+		localStorage.setItem('task', JSON.stringify(tasks));
+  	}
+
   let verifyCategory = (category) => {
 	categorySelected = category;
 	validate(taskName, taskDescription, taskDate, categorySelected);
