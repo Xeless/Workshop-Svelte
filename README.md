@@ -1,4 +1,17 @@
 # Workshop-Svelte
+Ce workshop vous est présenté par :
+
+<a href="https://github.com/Xeless">
+    <img src="https://img.shields.io/badge/Collaborateur-Xeless-red?style=for-the-badge&logo=github&logoColor=white" alt="Xeless" />
+</a>
+<br>
+<a href="https://github.com/lynekpng">
+    <img src="https://img.shields.io/badge/Collaborateur-Lyne-red?style=for-the-badge&logo=github&logoColor=white" alt="Lyne" />
+</a>
+<br>
+<a href="https://github.com/manu-cj">
+    <img src="https://img.shields.io/badge/Collaborateur-Manu-red?style=for-the-badge&logo=github&logoColor=white" alt="Xeless" />
+</a>
 
 
 
