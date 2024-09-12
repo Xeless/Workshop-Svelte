@@ -266,6 +266,11 @@
 					background-color: #4A3780;
 					color: white;
 					border-radius: 60px;
+					cursor: pointer;
+        			transition: 0.3s ease-out;
+					&:hover {
+						background-color: #654da9;
+					}
 				}
 
 				.categorys {

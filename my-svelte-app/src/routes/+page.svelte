@@ -9,7 +9,6 @@ function actived() {
     modalIsActived === false ? modalIsActived = true : modalIsActived = false;
     console.log(modalIsActived);
     
-    
 }
 
 
@@ -21,6 +20,7 @@ function actived() {
 <Test {actived}/>
 {/if}
  
+
 	
 <style lang="scss">
 	
