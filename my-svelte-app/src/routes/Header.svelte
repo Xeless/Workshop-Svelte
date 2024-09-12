@@ -7,7 +7,8 @@
 
 <style>
         header {
-            background-image: url('/Header.svg');
+                background-image: url('/Header\ \(1\).svg');
+                background-color: #4A3780;
             background-size: cover; 
 	    background-position: center;
 	    background-repeat: no-repeat;
