@@ -100,7 +100,10 @@
 		
 		if (!errorFound) {
 			saveTask(taskName, taskDate, taskDescription, categorySelected, false);
-			console.log("Ajouter la tâche au local storage");
+			taskName = "";
+			taskDescription = ""
+			categorySelected = ""
+			taskDate = ""
 		} else {
 			console.log("Des erreurs ont été trouvées, la tâche n'a pas été ajoutée");
 		}

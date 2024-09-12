@@ -52,7 +52,7 @@
                     <p style="color: red">Expired</p>
                 {/if}
 
-                {#if daysBetweenDates(task.date) === 1}
+                {#if daysBetweenDates(task.date) >= 0 && daysBetweenDates(task.date) < 2}
                     <p style="color: tomato">{daysBetweenDates(task.date)} day remaining</p>
                 {/if}
 
@@ -61,7 +61,7 @@
                 {/if}
 
                 {#if daysBetweenDates(task.date) >= 4}
-                    <p style="color: lightgreen">{daysBetweenDates(task.date)} days remaining</p>
+                    <p style="color: lightseagreen">{daysBetweenDates(task.date)} days remaining</p>
                 {/if}
             </div>
         </article>
@@ -80,7 +80,7 @@
                     <input type="checkbox" checked={task.completed} on:change={() => markAsCompleted(tasks.findIndex(t => t === task))}>
                 </div>
                 <div class="time">
-                    <p style="color: lightgreen">Completed</p>
+                    <p style="color: lightseagreen">Completed</p>
                 </div>
             </article>
             {/each}
@@ -101,19 +101,17 @@
         align-items: center;
     }
 
-    .tasks {
+    :where(.tasks-not-completed, .tasks){
         width: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: start;
         align-items: center;
+        max-height: 250px;
+        min-height: 250px;
+        overflow: scroll;
     }
     .tasks-not-completed {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         h2 {
             width: 300px;
         }
