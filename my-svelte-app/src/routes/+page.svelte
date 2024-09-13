@@ -80,6 +80,7 @@
 		</li>
 	  {/each}
 	</ul>
+	<button on:click={actived}>Add New Task</button>
 </section>
 
 	<section>
@@ -104,7 +105,6 @@
 			</li>
 		  {/each}
 		</ul>
-		<button on:click={actived}>Add New Task</button>
 	  </section>
 
 
